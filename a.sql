@@ -1,0 +1,65 @@
+CREATE DATABASE "EX";
+
+CREATE TABLE "states" (
+	"id" INTEGER PRIMARY KEY,
+	"name" TEXT NOT NULL
+);
+CREATE TABLE "citles" (
+	"id" INTEGER PRIMARY KEY,
+	"name" TEXT NOT NULL,
+	"stateId" INTEGER NOT NULL REFERENCES "states"("id")
+);
+
+CREATE TABLE "customerPhones" (
+	"id" INTEGER PRIMARY KEY,
+	"customerId" INTEGER NOT NULL REFERENCES "customerPhones"("id"),
+	
+	"number" DOUBLE PRECISION NOT NULL,
+	"type"  BOOLEAN NOT NULL
+);
+
+CREATE TABLE "customerAddresses" (
+	"id" INTEGER PRIMARY KEY,
+	"customerId" INTEGER NOT NULL REFERENCES "customerPhones"("id"),
+	"street" TEXT NOT NULL,
+	"number" DOUBLE PRECISION NOT NULL,
+	"complement" TEXT NOT NULL,
+	"postalCode" TEXT NOT NULL,
+	"cityId" INTEGER NOT NULL REFERENCES "citles"("id")
+	
+);
+CREATE TABLE "customers" (
+	"id" INTEGER PRIMARY KEY,
+	"fullName" TEXT NOT NULL,
+	"cpf" TEXT NOT NULL,
+	"email" TEXT NOT NULL,
+	"password" TEXT NOT NULL
+);
+CREATE TABLE "bankAccount" (
+	"id" INTEGER PRIMARY KEY,
+	"customerId" INTEGER NOT NULL REFERENCES "customers"("id"),
+	"accountNumber" DOUBLE PRECISION NOT NULL,
+	"agency" TEXT NOT NULL,
+	"openDate" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT  NOW(),
+	"closeDate" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+CREATE TABLE "transactions" (
+	"id" INTEGER PRIMARY KEY,
+	"bankAccountId" INTEGER NOT NULL REFERENCES "bankAccount"("id"),
+	"amount" DOUBLE PRECISION NOT NULL,
+	"type" TEXT NOT NULL,
+	"time" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT  NOW(),
+	"description" TEXT NOT NULL,
+	"cancelled" BOOLEAN NOT NULL
+);
+CREATE TABLE "creditCards" (
+	"id" INTEGER PRIMARY KEY,
+	"bankAccountId" INTEGER NOT NULL REFERENCES "bankAccount"("id"),
+	"name" TEXT NOT NULL,
+	"number" DOUBLE PRECISION NOT NULL,
+	"segurityCode" TEXT NOT NULL,
+	"expirationMonth" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT  NOW(),
+	"expirationYear" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT  NOW(),
+	"password" TEXT NOT NULL,
+	"limit" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT  NOW()
+);
